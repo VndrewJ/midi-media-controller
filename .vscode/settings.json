@@ -1,3 +1,10 @@
 {
-    "cmake.cmakePath": "C:/Users/Andrew/.platformio/packages/tool-cmake/bin/cmake.exe"
+    "cmake.cmakePath": "C:/Users/Andrew/.platformio/packages/tool-cmake/bin/cmake.exe",
+    "cmake.configureOnOpen": false,
+    "cmake.configureOnEdit": false,
+    "cmake.automaticReconfigure": false,
+    "cmake.generator": "Ninja",
+    "cmake.environment": {
+        "PATH": "C:/Users/Andrew/.platformio/packages/tool-ninja/bin;C:/msys64/mingw64/bin;${env:PATH}"
+    }
 }

@@ -1,3 +1,7 @@
+
+#ifndef LOGIC_POT_H
+#define LOGIC_POT_H
+
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -27,3 +31,5 @@ uint16_t smooth_pot_value_fp(midi_adc_t* adc);
 
 // Hysteresis function to prevent rapid toggling of MIDI CC values around a threshold
 uint8_t apply_hysteresis(uint8_t current_value, uint8_t new_value);
+
+#endif // LOGIC_POT_H

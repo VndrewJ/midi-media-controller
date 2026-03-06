@@ -1,7 +1,9 @@
 #include <unity.h>
 #include <stdint.h>
+#include <time.h>
 
 #include "logic_pot.h"
+#include "midi_protocol.h"
 
 void setUp(void) {
     // This is run before EACH TEST
@@ -86,13 +88,49 @@ void test_apply_hysteresis(void) {
     TEST_ASSERT_EQUAL_UINT8(8, apply_hysteresis(10, 8));   // Change, exceeds threshold
 }
 
+// Helper function that generates synthetic uptime_ms values for testing mask_13bit
+uint64_t generate_uptime_ms(uint64_t base, uint64_t offset) {
+    return base + offset;
+
+}
+
+void test_mask_13bit(void) {
+    // Example test case for mask_13bit
+    TEST_ASSERT_EQUAL_UINT16(0, Midi_Message::mask_13bit(0));
+    TEST_ASSERT_EQUAL_UINT16(1, Midi_Message::mask_13bit(1));
+    TEST_ASSERT_EQUAL_UINT16(127, Midi_Message::mask_13bit(127));
+    TEST_ASSERT_EQUAL_UINT16(8191, Midi_Message::mask_13bit(8191));  // Last valid value before wrap
+    TEST_ASSERT_EQUAL_UINT16(0, Midi_Message::mask_13bit(8192));     // Wraps around with some jitter
+    TEST_ASSERT_EQUAL_UINT16(1234, Midi_Message::mask_13bit(1234));   // Random Value
+    TEST_ASSERT_EQUAL_UINT16(1864, Midi_Message::mask_13bit(10056));   // Wrap with offset (10056 % 8192 = 1864)
+}
+
+void test_build_cc(void) {
+    // Example test case for build_cc
+    uint16_t ts_13bit = 1234;
+    BLE_MIDI_Packet pkt = Midi_Message::build_cc(Midi_CC::VOLUME, 64, ts_13bit);
+
+    TEST_ASSERT_EQUAL_UINT8(0x80 | (ts_13bit >> 7), pkt.data[0]);   // Header byte
+    TEST_ASSERT_EQUAL_UINT8(0x80 | (ts_13bit & 0x7F), pkt.data[1]); // Timestamp LSB
+    TEST_ASSERT_EQUAL_UINT8(0xB0 | MIDI_CHANNEL, pkt.data[2]);      // Status byte
+    TEST_ASSERT_EQUAL_UINT8((uint8_t)Midi_CC::VOLUME, pkt.data[3]); // CC number
+    TEST_ASSERT_EQUAL_UINT8(64, pkt.data[4]);                       // CC value
+}
+
+
 int main(void) {
     UNITY_BEGIN();
 
+    // adc logic tests
     RUN_TEST(test_convert_pot_value_to_midi_cc);
     RUN_TEST(test_smooth_pot_value_fp_1);
     RUN_TEST(test_filter_stability);
     RUN_TEST(test_filter_convergence);
     RUN_TEST(test_apply_hysteresis);
+    // midi protocol tests
+    RUN_TEST(test_mask_13bit);
+    RUN_TEST(test_build_cc);
+
+
     return UNITY_END();
 }

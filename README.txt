@@ -16,13 +16,16 @@ Controls media using MIDI CC instead of HID for more precise control over contro
 
 
 # TODO
-1. Implement BLE MIDI Driver using core 0 of MCU
-    a. Configure BLE for fast interval (7.5ms-15ms)
-2. Implement 1ms timer for high freq polling of peripherals using core 1
-    a. Mute Button
-    b. Potentiometer    
-        i. Calibration
-        ii. IIR Filter
-        iii. Hysterisis Filter
+1. Native logic DONE
+    a. Potentiometer logic
+    b. midi CC messages
+2. Peripheral Drivers (core 1)
+    a. mute button
+    b. timer setup for high freq polling
+    b. adc + potentiometer
+3. BLE driver (core 0)
+    a. configure for fast interval (7.5-15ms)
+
+
 
 
