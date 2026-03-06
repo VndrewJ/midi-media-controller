@@ -1,17 +1,29 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define SMOOTHING_SHIFT 3                 // Change this for smooth factor (e.g., 3 for 1/8th, 4 for 1/16th, etc.)
+#define HYSTERESIS_THRESHOLD 2            // Minimum change in MIDI CC value to consider it a valid update
+
+/*
+    @brief Structure to hold the raw potentiometer input, the accumulator for smoothing, and the last smoothed value.
+    @param raw_data_input The latest raw ADC reading from the potentiometer (0-4095).
+    @param accumulator A high-resolution accumulator that maintains a history of inputs for smoothing.
+    @param last_smoothed The last smoothed value that will be used to calculate the next MIDI CC value.
+*/
 struct midi_adc_t {
-    long accumulator;    // The "running total" for smoothing
-    int lastMidiValue;   // For Hysteresis/Change detection
-    int filterShift;     // Smoothing strength (e.g., 4)
+    uint16_t raw_data_input;   // x(i): 0-4095
+    uint32_t accumulator;      // z(i): High-res history (persistent)
+    uint16_t last_smoothed;    // y(i): The 12-bit result for the next loop
 };
 
 // Convert a potentiometer value (0-4095) to a MIDI CC value (0-127)
 uint8_t convert_pot_value_to_midi_cc(int pot_value);
 
+// Prime the accumulator with the first raw input to ensure it starts at a reasonable value
+void prime_accumulator(midi_adc_t* adc);
+
 // Smooth the potentiometer value to avoid abrupt changes in MIDI CC values
-uint8_t smooth_pot_value(uint8_t current_value, uint8_t new_value, float smoothing_factor);
+uint16_t smooth_pot_value_fp(midi_adc_t* adc);
 
 // Hysteresis function to prevent rapid toggling of MIDI CC values around a threshold
-uint8_t apply_hysteresis(uint8_t current_value, uint8_t new_value, uint8_t threshold);
+uint8_t apply_hysteresis(uint8_t current_value, uint8_t new_value);
