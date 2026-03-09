@@ -12,7 +12,7 @@ enum class Midi_CC : uint8_t {
 };
 
 // ── BLE MIDI packet ──────────────────────────────────────────────────────────
-// A single BLE MIDI CC message is always 5 bytes:
+// For this use case, we only need 5 bytes. Can update later if we want to support more message types.
 //   data[0]  Header byte       : 0x80 | ts[12:7]
 //   data[1]  Timestamp LSB     : 0x80 | ts[6:0]
 //   data[2]  Status byte       : 0xB0 | channel
@@ -25,8 +25,7 @@ struct BLE_MIDI_Packet {
 class Midi_Message {
 public:
     // Mask a raw uptime_ms value to the 13-bit range required by BLE MIDI.
-    // Call this with the result of ble_manager's uptime_ms(), or a synthetic
-    // value in native tests.
+    // Call with the result of ble_manager's uptime_ms()
     static uint16_t mask_13bit(uint64_t uptime_ms);
 
     // Build a ready-to-send BLE MIDI CC packet.

@@ -1,4 +1,4 @@
-#include <midi_protocol.h>
+#include "midi_protocol.h"
 
 uint16_t Midi_Message::mask_13bit(uint64_t uptime_ms) {
     // BLE MIDI spec: 13-bit timestamp, 1ms resolution, wraps every 8192ms.
