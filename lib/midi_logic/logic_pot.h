@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #define SMOOTHING_SHIFT 3                 // Change this for smooth factor (e.g., 3 for 1/8th, 4 for 1/16th, etc.)
-#define HYSTERESIS_THRESHOLD 2            // Minimum change in MIDI CC value to consider it a valid update
+#define HYSTERESIS_THRESHOLD 4            // Minimum change in MIDI CC value to consider it a valid update
 
 /*
     @brief Structure to hold the raw potentiometer input, the accumulator for smoothing, and the last smoothed value.
