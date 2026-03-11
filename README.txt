@@ -20,9 +20,9 @@ Controls media using MIDI CC instead of HID for more precise control over contro
     a. Potentiometer logic
     b. midi CC messages
 2. Peripheral Drivers (core 1)
-    a. mute button
-    b. timer setup for high freq polling
-    b. adc + potentiometer
+    a. mute button DONE
+    b. timer setup for high freq polling TODO
+    b. adc + potentiometer DONE
 3. BLE driver (core 0)
     a. configure for fast interval (7.5-15ms)
 

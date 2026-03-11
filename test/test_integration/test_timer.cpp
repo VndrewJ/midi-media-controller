@@ -65,6 +65,7 @@ static void scan_task(void* arg) {
         } else if (++btn_debounce >= BTN_DEBOUNCE_MS) {
             btn_stable   = btn_raw;
             btn_debounce = 0;
+            // Pullup: LOW = pressed
             printf("[BTN] %s\n", btn_stable == 0 ? "PRESSED" : "RELEASED");
         }
     }
