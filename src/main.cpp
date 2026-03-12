@@ -8,11 +8,9 @@
 #include "adc_driver.h"
 #include "gpio_driver.h"
 
-#define READ_LEN       256
-#define BTN_DEBOUNCE_MS 20  // Ticks (ms) before a button edge is accepted
+#define READ_LEN 256
 
-// Peripheral scan task — pinned to core 1, leaving core 0 free for BLE.
-// Wakes on every 1ms tick posted to tick_queue by the gptimer ISR.
+// Scans peripherals every 1ms tick posted by the gptimer ISR
 static void scan_task(void* arg) {
     QueueHandle_t tick_queue = (QueueHandle_t)arg;
     uint32_t tick = 0;
@@ -25,8 +23,8 @@ static void scan_task(void* arg) {
     uint8_t last_midi_cc = 0xFF;
 
     // Button debounce state
-    int btn_stable   = gpio_get_level(BUTTON_PIN);
-    int btn_debounce = 0;
+    midi_btn_t btn_state;
+    init_btn(&btn_state, gpio_get_level(BUTTON_PIN));
 
     while (1) {
         // Block until the ISR posts the next 1ms tick
@@ -58,14 +56,8 @@ static void scan_task(void* arg) {
             }
         }
 
-        // ── Button (debounced) ───────────────────────────────────────────
-        int btn_raw = gpio_get_level(BUTTON_PIN);
-        if (btn_raw == btn_stable) {
-            btn_debounce = 0;
-        } else if (++btn_debounce >= BTN_DEBOUNCE_MS) {
-            btn_stable   = btn_raw;
-            btn_debounce = 0;
-            printf("[BTN] %s\n", btn_stable == 0 ? "PRESSED" : "RELEASED");
+        if (debounce_btn(&btn_state, gpio_get_level(BUTTON_PIN))) {
+            printf("[BTN] %s\n", btn_state.stable == 0 ? "PRESSED" : "RELEASED");
         }
     }
 }
