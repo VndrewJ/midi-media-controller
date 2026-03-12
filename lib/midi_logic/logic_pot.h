@@ -7,6 +7,7 @@
 
 #define SMOOTHING_SHIFT 3                 // Change this for smooth factor (e.g., 3 for 1/8th, 4 for 1/16th, etc.)
 #define HYSTERESIS_THRESHOLD 2            // Minimum change in MIDI CC value to consider it a valid update
+#define BTN_DEBOUNCE_MS      20            // Ticks (ms) before a button edge is accepted
 
 /*
     @brief Structure to hold the raw potentiometer input, the accumulator for smoothing, and the last smoothed value.
@@ -31,5 +32,21 @@ uint16_t smooth_pot_value_fp(midi_adc_t* adc);
 
 // Hysteresis function to prevent rapid toggling of MIDI CC values around a threshold
 uint8_t apply_hysteresis(uint8_t current_value, uint8_t new_value);
+
+/*
+    @brief State for a single debounced button.
+    @param stable  The last accepted stable level (0 = pressed, 1 = released).
+    @param counter Number of consecutive ticks the raw level has differed from stable.
+*/
+struct midi_btn_t {
+    int stable;
+    int counter;
+};
+
+// Initialise debounce state with the current pin level.
+void init_btn(midi_btn_t* btn, int initial_level);
+
+// Checks if button is debounced 
+bool debounce_btn(midi_btn_t* btn, int raw_level);
 
 #endif // LOGIC_POT_H

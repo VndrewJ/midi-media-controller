@@ -28,3 +28,21 @@ uint8_t apply_hysteresis(uint8_t current_value, uint8_t new_value) {
     }
     return current_value; // Otherwise, keep the current value
 }
+
+void init_btn(midi_btn_t* btn, int initial_level) {
+    btn->stable  = initial_level;
+    btn->counter = 0;
+}
+
+bool debounce_btn(midi_btn_t* btn, int raw_level) {
+    if (raw_level == btn->stable) {
+        btn->counter = 0;
+        return false;
+    }
+    if (++btn->counter >= BTN_DEBOUNCE_MS) {
+        btn->stable  = raw_level;
+        btn->counter = 0;
+        return true;
+    }
+    return false;
+}
