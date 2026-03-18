@@ -11,6 +11,11 @@
 
 extern bool ble_connected;
 
+class MyServerCallbacks : public NimBLEServerCallbacks {
+    void onConnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo) override;
+    void onDisconnect(NimBLEServer* pServer, NimBLEConnInfo& connInfo, int reason) override;
+};
+
 // Initialise BLE MIDI service and start advertising.
 void ble_manager_init();
 

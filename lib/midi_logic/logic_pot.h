@@ -39,14 +39,14 @@ uint8_t apply_hysteresis(uint8_t current_value, uint8_t new_value);
     @param counter Number of consecutive ticks the raw level has differed from stable.
 */
 struct midi_btn_t {
-    int stable;
+    bool stable;
     int counter;
 };
 
 // Initialise debounce state with the current pin level.
-void init_btn(midi_btn_t* btn, int initial_level);
+void init_btn(midi_btn_t* btn, bool initial_level);
 
 // Checks if button is debounced 
-bool debounce_btn(midi_btn_t* btn, int raw_level);
+bool debounce_btn(midi_btn_t* btn, bool raw_level);
 
 #endif // LOGIC_POT_H

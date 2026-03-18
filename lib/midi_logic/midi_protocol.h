@@ -2,6 +2,7 @@
 #define MIDI_PROTOCOL_H
 
 #include <stdint.h>
+#include <string.h>
 
 // Default MIDI Channel, add more later if needed
 #define MIDI_CHANNEL 0
@@ -18,9 +19,9 @@ enum class Midi_CC : uint8_t {
 //   data[2]  Status byte       : 0xB0 | channel
 //   data[3]  CC number         : (uint8_t)Midi_CC
 //   data[4]  CC value          : 0-127
-struct BLE_MIDI_Packet {
+typedef struct __attribute__((packed)) {
     uint8_t data[5];
-};
+} BLE_MIDI_Packet_t;
 
 class Midi_Message {
 public:
@@ -30,7 +31,7 @@ public:
 
     // Build a ready-to-send BLE MIDI CC packet.
     // ts_13bit: result of mask_13bit(), must be provided by the caller.
-    static BLE_MIDI_Packet build_cc(Midi_CC cc, uint8_t value, uint16_t ts_13bit, uint8_t channel = MIDI_CHANNEL);
+    static BLE_MIDI_Packet_t build_cc(Midi_CC cc, uint8_t value, uint16_t ts_13bit, uint8_t channel = MIDI_CHANNEL);
 };
 
 #endif // MIDI_PROTOCOL_H
