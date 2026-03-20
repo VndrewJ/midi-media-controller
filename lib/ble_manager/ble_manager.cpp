@@ -30,6 +30,9 @@ void ble_manager_init() {
     pService->start();
     NimBLEAdvertising* pAdvertising = NimBLEDevice::getAdvertising();
     pAdvertising->addServiceUUID(MIDI_SERVICE_UUID);
+
+    pAdvertising->enableScanResponse(true);
+
     pAdvertising->start();
     ble_connected = false;
 }

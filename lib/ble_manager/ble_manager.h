@@ -7,7 +7,7 @@
 
 #define MIDI_SERVICE_UUID        "03B80E5A-EDE8-4B33-A751-6CE34EC4C700"
 #define MIDI_CHARACTERISTIC_UUID "7772E5DB-3868-4112-A1A9-F2669D106BF3"
-#define DEVICE_NAME              "ESP32 MIDI Controller"
+#define DEVICE_NAME              "ESP-MIDI"
 
 extern bool ble_connected;
 

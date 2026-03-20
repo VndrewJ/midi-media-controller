@@ -33,7 +33,7 @@ static void scan_task(void* arg) {
 
         if (debounce_btn(&btn_state, gpio_get_level(BUTTON_PIN))) {
             if (btn_state.stable) {
-                midi_queue_item_t item = {Midi_CC::MUTE, 127};
+                midi_queue_item_t item = {(Midi_CC)7, 0};   // Volume CC with value 0 (mute) For garage band
                 xQueueSend(args->midi_queue, &item, 0);
             }
         }
