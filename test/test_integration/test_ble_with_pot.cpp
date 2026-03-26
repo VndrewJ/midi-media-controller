@@ -70,7 +70,7 @@ static void scan_task(void* arg) {
 
         if (debounce_btn(&btn_state, gpio_get_level(BUTTON_PIN))) {
             if (btn_state.stable) {
-                midi_queue_item_t item = {Midi_CC::VOLUME, 127};
+                midi_queue_item_t item = {Midi_CC::VOLUME, 0};
                 if (!xQueueSend(args->midi_queue, &item, 0)) {
                     printf("[BTN] MIDI queue full, message dropped!\n");
                 }
